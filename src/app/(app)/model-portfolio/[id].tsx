@@ -12,6 +12,41 @@ const TABS = [
   { id: 'model-details', label: 'Model Details' },
 ] as const;
 
+type AccountsTabProps = {
+  // Add props as needed none for now
+};
+
+function AccountsTab({}: AccountsTabProps) {
+  return (
+    <View className="flex-1 items-center justify-center p-4">
+      <Text className="text-lg text-white">Accounts Section</Text>
+    </View>
+  );
+}
+
+type ModelDetailsTabProps = {
+  created: string;
+};
+// TODO: Hardcoded values ok for now
+function ModelDetailsTab({ created }: ModelDetailsTabProps) {
+  return (
+    <>
+      <MetadataCard
+        riskLevel="Aggressive"
+        taxType="Tax-advantaged"
+        created={created}
+      />
+
+      {/* Content will be added in subsequent iterations */}
+      <View className="flex-1 p-4">
+        <Text className="text-white">
+          Portfolio breakdown will be added here
+        </Text>
+      </View>
+    </>
+  );
+}
+
 export default function ModelPortfolioScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [activeTab, setActiveTab] = React.useState<string>('model-details');
@@ -35,6 +70,20 @@ export default function ModelPortfolioScreen() {
     );
   }
 
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'accounts':
+        return <AccountsTab />;
+      case 'model-details':
+      default:
+        return (
+          <ModelDetailsTab
+            created={new Date(metadata.created).toLocaleDateString()}
+          />
+        );
+    }
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-neutral-900">
       {/* Title and Tags */}
@@ -50,18 +99,7 @@ export default function ModelPortfolioScreen() {
         onTabPress={setActiveTab}
       />
 
-      <MetadataCard
-        riskLevel="Aggressive"
-        taxType="Tax-advantaged"
-        created={new Date(metadata.created).toLocaleDateString()}
-      />
-
-      {/* Content will be added in subsequent iterations */}
-      <View className="flex-1 p-4">
-        <Text className="text-white">
-          Portfolio breakdown will be added here
-        </Text>
-      </View>
+      {renderTabContent()}
     </SafeAreaView>
   );
 }
