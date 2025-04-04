@@ -14,7 +14,9 @@ type Props = {
 export function Header({ title, tags = [] }: Props) {
   return (
     <View className="flex-row items-center justify-between px-4 py-3">
-      <Text className="text-2xl font-medium">{title}</Text>
+      <Text className="text-2xl font-medium text-white dark:text-black">
+        {title}
+      </Text>
       <View className="flex-row gap-2">
         {tags.map((tag) => (
           <View
