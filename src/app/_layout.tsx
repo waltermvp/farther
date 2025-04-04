@@ -20,6 +20,7 @@ export { ErrorBoundary } from 'expo-router';
 export const unstable_settings = {
   initialRouteName: '(app)',
 };
+console.log('inital commit');
 
 hydrateAuth();
 loadSelectedTheme();
