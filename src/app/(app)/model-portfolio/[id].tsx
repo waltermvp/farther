@@ -1,108 +1,66 @@
-import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 import * as React from 'react';
 
+import { usePortfolio, usePortfolioBreakdown } from '@/api/portfolio';
 import { Header } from '@/components/header';
+import { MetadataCard } from '@/components/model-portfolio/metadata-card';
+import { TabNavigation } from '@/components/tab-navigation';
 import { SafeAreaView, Text, View } from '@/components/ui';
 
-// type TimeSpan = '1Y' | '3Y' | '5Y' | '10Y';
-
-type PortfolioMetadata = {
-  riskLevel: number;
-  type: 'TaxAdvantaged';
-  created: string;
-};
-
-type Security = {
-  description: string;
-  allocation: number;
-};
-
-type Category = {
-  category: 'Equity' | 'CASH';
-  securities: Record<string, Security>;
-};
-
-type PortfolioBreakdown = Record<string, Category>;
-
-function usePortfolioData(id: string) {
-  const { data: metadata } = useQuery<PortfolioMetadata>({
-    queryKey: ['portfolio', id],
-    queryFn: () => fetch(`/portfolio/${id}`).then((res) => res.json()),
-  });
-
-  const { data: breakdown } = useQuery<PortfolioBreakdown>({
-    queryKey: ['portfolio', id, 'breakdown'],
-    queryFn: () =>
-      fetch(`/portfolio/${id}/breakdown`).then((res) => res.json()),
-  });
-
-  return {
-    metadata,
-    breakdown,
-  };
-}
+const TABS = [
+  { id: 'accounts', label: 'Accounts' },
+  { id: 'model-details', label: 'Model Details' },
+] as const;
 
 export default function ModelPortfolioScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { metadata, breakdown } = usePortfolioData(id);
+  const [activeTab, setActiveTab] = React.useState<string>('model-details');
+
+  const { data: metadata } = usePortfolio({
+    variables: { id },
+  });
+
+  const { data: breakdown } = usePortfolioBreakdown({
+    variables: { id },
+  });
 
   if (!metadata || !breakdown) {
     return (
-      <SafeAreaView className="flex-1 bg-white">
-        <Header title="Loading..." />
+      <SafeAreaView className="flex-1 bg-neutral-900">
+        <Header title="Farther 80/20 Model Portfolio" />
         <View className="flex-1 items-center justify-center">
-          <Text>Loading portfolio data...</Text>
+          <Text className="text-white">Loading portfolio data...</Text>
         </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <Header title="Model Portfolio" />
+    <SafeAreaView className="flex-1 bg-neutral-900">
+      {/* Title and Tags */}
+      <Header
+        title="Farther 80/20 Model Portfolio"
+        tags={[{ label: 'Tax-Advantaged' }, { label: 'Farther' }]}
+      />
 
-      {/* Portfolio Header */}
-      <View className="flex-row items-center justify-between px-4 py-2">
-        <Text className="text-2xl font-bold">
-          Farther 80/20 Model Portfolio
-        </Text>
-        <View className="flex-row gap-2">
-          <View className="rounded-full bg-neutral-100 px-3 py-1">
-            <Text className="text-sm">Tax-Advantaged</Text>
-          </View>
-          <View className="rounded-full bg-neutral-100 px-3 py-1">
-            <Text className="text-sm">Farther</Text>
-          </View>
-        </View>
-      </View>
+      {/* Navigation Tabs */}
+      <TabNavigation
+        tabs={TABS}
+        activeTab={activeTab}
+        onTabPress={setActiveTab}
+      />
 
-      {/* Tab Navigation */}
-      <View className="flex-row border-b border-neutral-200 px-4">
-        <View className="border-primary border-b-2 px-4 py-2">
-          <Text className="font-medium">Model Details</Text>
-        </View>
-      </View>
-
-      {/* Metadata Table */}
-      <View className="border-b border-neutral-200 px-4 py-2">
-        <View className="flex-row justify-between py-2">
-          <Text className="text-neutral-600">Risk Level</Text>
-          <Text>{metadata.riskLevel}</Text>
-        </View>
-        <View className="flex-row justify-between py-2">
-          <Text className="text-neutral-600">Tax Type</Text>
-          <Text>{metadata.type}</Text>
-        </View>
-        <View className="flex-row justify-between py-2">
-          <Text className="text-neutral-600">Created</Text>
-          <Text>{new Date(metadata.created).toLocaleDateString()}</Text>
-        </View>
-      </View>
+      <MetadataCard
+        riskLevel="Aggressive"
+        taxType="Tax-advantaged"
+        created={new Date(metadata.created).toLocaleDateString()}
+      />
 
       {/* Content will be added in subsequent iterations */}
       <View className="flex-1 p-4">
-        <Text>Portfolio breakdown will be added here</Text>
+        <Text className="text-white">
+          Portfolio breakdown will be added here
+        </Text>
       </View>
     </SafeAreaView>
   );

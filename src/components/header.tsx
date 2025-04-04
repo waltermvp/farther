@@ -1,24 +1,30 @@
-import { useRouter } from 'expo-router';
 import * as React from 'react';
 
-import { Pressable, Text, View } from '@/components/ui';
+import { Text, View } from '@/components/ui';
+
+type Tag = {
+  label: string;
+};
 
 type Props = {
   title: string;
-  showBack?: boolean;
+  tags?: Tag[];
 };
 
-export function Header({ title, showBack = true }: Props) {
-  const router = useRouter();
-
+export function Header({ title, tags = [] }: Props) {
   return (
-    <View className="flex-row items-center border-b border-neutral-200 px-4 py-3">
-      {showBack && (
-        <Pressable onPress={router.back} className="mr-3">
-          <Text className="text-primary">Back</Text>
-        </Pressable>
-      )}
-      <Text className="flex-1 text-lg font-medium">{title}</Text>
+    <View className="flex-row items-center justify-between px-4 py-3">
+      <Text className="text-2xl font-medium">{title}</Text>
+      <View className="flex-row gap-2">
+        {tags.map((tag) => (
+          <View
+            key={tag.label}
+            className="rounded-full bg-neutral-700 px-3 py-1"
+          >
+            <Text className="text-sm text-white">{tag.label}</Text>
+          </View>
+        ))}
+      </View>
     </View>
   );
 }
