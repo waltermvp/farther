@@ -1,4 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Link, Redirect, SplashScreen, Tabs } from 'expo-router';
 import React, { useCallback, useEffect } from 'react';
 
@@ -32,6 +33,15 @@ export default function TabLayout() {
   }
   return (
     <Tabs>
+      <Tabs.Screen
+        name="model-portfolio/[id]"
+        options={{
+          title: 'Model Portfolio',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="finance" size={24} color={color} />
+          ),
+        }}
+      />
       <Tabs.Screen
         name="index"
         options={{
