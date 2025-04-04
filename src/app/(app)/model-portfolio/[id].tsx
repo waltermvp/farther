@@ -12,7 +12,7 @@ import { BreakdownTable } from '@/components/model-portfolio/breakdown-table';
 import { MetadataCard } from '@/components/model-portfolio/metadata-card';
 import { PerformanceCard } from '@/components/model-portfolio/performance-card';
 import { TabNavigation } from '@/components/tab-navigation';
-import { SafeAreaView, Text, View } from '@/components/ui';
+import { SafeAreaView, ScrollView, Text, View } from '@/components/ui';
 
 const TABS = [
   { id: 'accounts', label: 'Accounts' },
@@ -60,19 +60,21 @@ export default function ModelPortfolioScreen() {
         onTabPress={setActiveTab}
       />
 
-      <MetadataCard
-        riskLevel="Aggressive"
-        taxType="Tax-advantaged"
-        created={new Date(metadata.created).toLocaleDateString()}
-      />
+      <ScrollView className="flex-1">
+        <MetadataCard
+          riskLevel="Aggressive"
+          taxType="Tax-advantaged"
+          created={new Date(metadata.created).toLocaleDateString()}
+        />
 
-      <PerformanceCard
-        value={performance.twr}
-        timeSpan={timeSpan}
-        onTimeSpanChange={setTimeSpan}
-      />
+        <PerformanceCard
+          value={performance.twr}
+          timeSpan={timeSpan}
+          onTimeSpanChange={setTimeSpan}
+        />
 
-      <BreakdownTable data={breakdown} />
+        <BreakdownTable data={breakdown} />
+      </ScrollView>
     </SafeAreaView>
   );
 }

@@ -14,7 +14,7 @@ const TIME_SPANS: TimeSpan[] = ['1Y', '3Y', '5Y', '10Y'];
 
 export function PerformanceCard({ value, timeSpan, onTimeSpanChange }: Props) {
   return (
-    <View className="mt-4 rounded-lg bg-neutral-800">
+    <View className="m-4 rounded-lg bg-neutral-800">
       <View className="flex-row items-center justify-between p-4">
         <Text className="text-lg font-medium text-white">
           Historical Performance

@@ -172,7 +172,7 @@ export function BreakdownTable({ data }: Props) {
   };
 
   return (
-    <View className="mt-4 rounded-lg bg-neutral-800">
+    <View className="m-4 rounded-lg bg-neutral-800">
       <View className="flex-row items-center justify-between border-b border-neutral-700 p-4">
         <Text className="text-lg font-medium text-white">Model Breakdown</Text>
         <Text className="text-sm text-neutral-400">14 Securities</Text>
